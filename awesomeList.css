@@ -1,0 +1,38 @@
+body {
+         width: 960px;
+   margin-left: auto;
+  margin-right: auto;
+    text-align: center;
+   padding-top: 150px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+/*input[type='submit'] {
+  width: 50px;
+  margin-right: -50px;
+}*/
+
+h1, p, input, li, ul {
+        font-family: 'Alegreya Sans', sans-serif;
+        margin-left: auto;
+       margin-right: auto;
+          animation: fadein 2s;
+  -webkit-animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+input {
+  font-size: 1em;
+}
