@@ -21,7 +21,8 @@ function makeListTextItem(text, name) {
   textItem.readOnly = true;
   textItem.value = text;
   textItem.setAttribute('class', 'listTextItem');
-  textItem.setAttribute('name', name);
+  if (name !== undefined)
+    textItem.setAttribute('name', name);
   return textItem;
 
 }
@@ -52,9 +53,15 @@ function makeAddButton(textBox, itemList, namer) {
 
     var textItem     = makeListTextItem( textBox.value, namer( itemList.children.length ) );
 
-    var deleteButton = makeDeleteButton( newDOMItem, Array.prototype.forEach.bind(itemList.children, function(li, index) {
-      li.children[0].setAttribute('name', namer(index));
-    }));
+    var cleanUpFunction;
+    if (namer !== undefined) {
+
+      cleanUpFunction = Array.prototype.forEach.bind(itemList.children, function(li, index) {
+        li.children[0].setAttribute('name', namer(index));
+      });
+
+    }
+    var deleteButton = makeDeleteButton( newDOMItem, cleanUpFunction );
 
     newDOMItem.appendChild( textItem );
     newDOMItem.appendChild( deleteButton );
@@ -73,7 +80,7 @@ function makeListFromNode(listNode) {
 
   // Format list-item names so that they will be POSTed as a
   // PHP array.
-  var makeTextItemName = function(index) {
+  var makeTextItemName = listName === undefined ? undefined : function(index) {
     return listName + "[" + index + "]";
   }
 
