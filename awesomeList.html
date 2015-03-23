@@ -1,24 +1,47 @@
 <html>
 <head>
-  <!-- <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:400,800' rel='stylesheet' type='text/css'> -->
+  <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:400,800' rel='stylesheet' type='text/css'>
   <link href='awesomeList.css' rel='stylesheet' type='text/css'>
   <script type='text/javascript' src='awesomeList.js'></script>
   <title>Max's Awesome Form Component</title>
 </head>
 <body>
 
-<h1>Hello, World!</h1>
+<div id="allContent">
 
-<p>Really, I mean it, hello!</p>
+  <div class="banner">
 
-<form id="form">
-  <input id="userText">
-  <button id="add">ADD</button>
-  <button id="submit">Submit all.</button>
-</form>
+    <h1>Max's List Components!</h1>
 
-<ul id="items">
-</ul>
+    <p>Enter text! Click buttons!</p>
+
+  </div>
+
+  <form id="form">
+    <input type="submit" value="Send All Lists">
+    <input class="list" type="hidden" name="list0">
+    <input class="list" type="hidden" name="list1">
+    <input class="list" type="hidden" name="list2">
+    <input class="list" type="hidden" name="list3">
+    <input class="list" type="hidden" name="list4">
+    <input class="list" type="hidden" name="list5">
+    <input class="list" type="hidden" name="list6">
+    <input class="list" type="hidden" name="list7">
+    <input class="list" type="hidden" name="list8">
+  </form>
+
+  <script>
+  document.getElementById('form').onsubmit = function(e) {
+
+    e.preventDefault();
+
+    listComponents.forEach(function(list) {
+      console.log(list.submit());
+    });
+  };
+  </script>
+
+</div>
 
 </body>
 </html>

@@ -1,24 +1,26 @@
-body {
+#allContent {
          width: 960px;
    margin-left: auto;
   margin-right: auto;
-    text-align: center;
-   padding-top: 150px;
+}
+
+.banner {
+  width: 100%;
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
 
 ul {
   list-style-type: none;
+  padding-left: 0;
 }
 
-/*input[type='submit'] {
-  width: 50px;
-  margin-right: -50px;
-}*/
+h1, p {
+  text-align: center;
+}
 
-h1, p, input, li, ul {
+h1, p, input {
         font-family: 'Alegreya Sans', sans-serif;
-        margin-left: auto;
-       margin-right: auto;
           animation: fadein 2s;
   -webkit-animation: fadein 2s;
 }
@@ -35,4 +37,30 @@ h1, p, input, li, ul {
 
 input {
   font-size: 1em;
+  margin-right: 5px;
+}
+
+input[type="submit"] {
+  font-size: 10em;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.listComponent {
+  width: 200px;
+  float: left;
+  margin-right: 5px;
+}
+
+li {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+
+.listTextItem {
+  border:  none;
+  outline: none;
 }

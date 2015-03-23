@@ -1,86 +1,124 @@
-function ListComponent() {
+function makeOuterDiv() {
+  var div = document.createElement('div');
+  div.setAttribute('class', 'listComponent');
+  return div;
+}
 
-  var outerDiv = document.createElement('div');
-  var form     = document.createElement('form');
-  
+function makeNonSubmitButton(onclick, text) {
+
+  var newButton = document.createElement('button');
+  newButton.setAttribute('type', 'button');
+  if (text !== undefined)
+    newButton.innerHTML = text;
+  newButton.onclick = onclick;
+  return newButton;
+
+}
+
+function makeListTextItem(text, name) {
+
+  var textItem     = document.createElement('input');
+  textItem.readOnly = true;
+  textItem.value = text;
+  textItem.setAttribute('class', 'listTextItem');
+  textItem.setAttribute('name', name);
+  return textItem;
+
+}
+
+function makeDeleteButton(toDelete, cleanUp) {
+
+  return makeNonSubmitButton(function(e) {
+
+    e.preventDefault();
+
+    toDelete.parentNode.removeChild(toDelete);
+
+    cleanUp();
+
+  });
+
+}
+
+function makeAddButton(textBox, itemList, namer) {
+
+  return makeNonSubmitButton(function(e) {
+
+    e.preventDefault();
+    if (textBox.value.length === 0)
+      return;
+
+    var newDOMItem   = document.createElement('li');
+
+    var textItem     = makeListTextItem( textBox.value, namer( itemList.children.length ) );
+
+    var deleteButton = makeDeleteButton( newDOMItem, Array.prototype.forEach.bind(itemList.children, function(li, index) {
+      li.children[0].setAttribute('name', namer(index));
+    }));
+
+    newDOMItem.appendChild( textItem );
+    newDOMItem.appendChild( deleteButton );
+    itemList.appendChild( newDOMItem );
+
+    textBox.value = '';
+
+  }, 'ADD');
+
+}
+
+function makeListFromNode(listNode) {
+
+  // Co-opt the original HTML form component's name
+  var listName  = listNode.name;
+
+  // Format list-item names so that they will be POSTed as a
+  // PHP array.
+  var makeTextItemName = function(index) {
+    return listName + "[" + index + "]";
+  }
+
+  var componentDiv = makeOuterDiv();
+  var textBox   = document.createElement('input');
+  var itemList  = document.createElement('ul');
+  var addButton = makeAddButton(textBox, itemList, makeTextItemName);
+  [textBox, addButton, itemList].forEach(componentDiv.appendChild.bind(componentDiv));
+
+  // Remove original component, insert our new ones
+  var parentForm = listNode.parentNode;
+  parentForm.insertBefore(componentDiv, listNode);
+  parentForm.removeChild(listNode);
+
+  return {
+    reset: function() {
+      while (itemList.children.length > 0) {
+        itemList.removeChild(itemList.children[0]);
+      }
+    },
+    getArray: function() {
+      return Array.prototype.map.call(itemList.children, function(li) {
+        var textItem = li.children[0];
+        var text     = textItem.value;
+        return text;
+      });
+    },
+    submit: function() {
+      var textArray = this.getArray();
+      this.reset();
+      return textArray;
+    }
+  };
 
 }
 
 window.onload = function() {
 
+  window.listComponents = [];
 
+  while (true) {
+    var lists = document.getElementsByClassName('list');
+    if (lists.length === 0)
+      break;
+    window.listComponents.push(makeListFromNode(lists[0]));
+  }
 
-  // function makeNode(type, attributes, properties) {
-
-  //   var newThing = document.createElement(type);
-  //   for (var attr in attributes) {
-  //     if (attributes.hasOwnProperty(attr)) {
-  //       newThing.setAttribute(attr, attributes[attr]);
-  //     }
-  //   }
-  //   for (var prop in properties) {
-  //     if (properties.hasOwnProperty(prop)) {
-  //       newThing[prop] = properties[prop];
-  //     }
-  //   }
-  //   return newThing;
-  // }
-
-  // var ItemList = function() {
-
-  //   this.node      = makeNode('ul', { 'class': 'itemList' }, {});
-
-  //   this.getArray  = function() { return list.slice(); };
-
-  //   this.addItem   = function(text) { 
-  //     var li = makeNode('li', { 'id': 'item' }, { 'innerText': text });
-  //     var button = makeNode('input', { 'type': 'submit', 'value': 'X' }, { 'onclick': function() {
-  //       li.parentNode.removeChild(li);
-  //     }});
-  //     li.appendChild(button);
-  //     this.node.appendChild(li);
-  //   };
-
-  //   this.submit    = function() {
-  //     var textItems = Array.prototype.map.call(this.node.children, function(node) { return node.childNodes[0].textContent; });
-  //     while (this.node.children.length > 0) {
-  //       var topChild = this.node.children[0];
-  //       this.node.removeChild(topChild);
-  //     }
-  //     return textItems;
-  //   }
-  // };
-
-  // var ItemForm = function() {
-
-  // }
-
-  // var ListComponent = function() {
-
-  //   var node = makeNode('div', { 'class': 'listComponent' });
-  //   var form = makeNode('form', {}, {});
-  //   var itemList = new ItemList();
-
-  //   form.onsubmit = function(e) {
-  //     e.preventDefault();
-  //     if (userText.value === '')
-  //       return;
-  //     itemList.addItem(userText.value);
-  //     userText.value = '';
-  //   };
-
-  // }
-
-  // var form      = document.getElementById('form');
-  // var userText  = document.getElementById('userText');
-  // var addButton = document.getElementById('add');
-  // var submitter = document.getElementById('submit');
-
-
-
-  // submitter.onclick = function(e) {
-  //   e.preventDefault();
-  //   console.log(itemList.submit());
-  // };
-
-}
+};
