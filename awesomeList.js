@@ -1,16 +1,23 @@
-function makeOuterDiv() {
+function makeSimpleDiv(className) {
   var div = document.createElement('div');
-  div.setAttribute('class', 'listComponent');
+  div.setAttribute('class', className);
   return div;
 }
 
 function makeNonSubmitButton(onclick, text) {
 
   var newButton = document.createElement('button');
+
   newButton.setAttribute('type', 'button');
+
   if (text !== undefined)
     newButton.innerHTML = text;
-  newButton.onclick = onclick;
+
+  newButton.onclick = function(e) {
+    e.preventDefault();
+    onclick();
+  };
+  
   return newButton;
 
 }
@@ -31,8 +38,6 @@ function makeDeleteButton(toDelete, cleanUp) {
 
   return makeNonSubmitButton(function(e) {
 
-    e.preventDefault();
-
     toDelete.parentNode.removeChild(toDelete);
 
     cleanUp();
@@ -45,7 +50,6 @@ function makeAddButton(textBox, itemList, namer) {
 
   return makeNonSubmitButton(function(e) {
 
-    e.preventDefault();
     if (textBox.value.length === 0)
       return;
 
@@ -84,7 +88,7 @@ function makeListFromNode(listNode) {
     return listName + "[" + index + "]";
   }
 
-  var componentDiv = makeOuterDiv();
+  var componentDiv = makeSimpleDiv('listComponent');
   var textBox   = document.createElement('input');
   var itemList  = document.createElement('ul');
   var addButton = makeAddButton(textBox, itemList, makeTextItemName);
